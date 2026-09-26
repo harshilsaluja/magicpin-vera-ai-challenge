@@ -8,6 +8,7 @@
     "test": "node --test",
     "dataset:expand": "node scripts/generate-expanded-dataset.js",
     "judge:local": "node scripts/phase6-judge.js",
+    "judge:cloudflare:expanded": "node scripts/cloudflare-expanded-judge.js",
     "preflight": "node scripts/deployment-preflight.js"
   },
   "engines": {

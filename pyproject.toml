@@ -1,0 +1,29 @@
+[project]
+name = "vera-challenge-cloudflare"
+version = "1.1.0"
+description = "FastAPI and D1 deployment for the Magicpin Vera AI Challenge"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.117.1,<1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1,<9",
+    "workers-py",
+    "workers-runtime-sdk",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["python_tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+"cloudflare_app/main.py" = ["E402"]

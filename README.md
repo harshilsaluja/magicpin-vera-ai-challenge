@@ -2,12 +2,12 @@
 
 A staged, no-LLM implementation for the magicpin Vera AI Challenge.
 
-## Chosen stack
+## Supported stacks
 
-- Node.js 24
-- Native `http` server (no framework or package installation required)
-- Built-in SQLite database (`node:sqlite`)
-- Transactional, versioned context storage
+- Recommended public deployment: Python, FastAPI, Pydantic, Cloudflare Python Workers, and Cloudflare D1.
+- Reference/local deployment: Node.js 24, native `http`, and built-in SQLite (`node:sqlite`).
+- Both targets implement the same deterministic decision and reply behavior; no external LLM is required.
+- Both targets provide durable, versioned context and stateful conversation storage.
 
 Phases 1–7 provide the API foundation, durable context storage, proactive message composition, stateful conversations, quality/safety hardening, judge-focused verification, and production deployment packaging. The implementation is deterministic and does not require an external LLM.
 
@@ -21,10 +21,19 @@ The service listens on `http://localhost:8080` by default. Set `PORT` to use a d
 
 Copy the values from `.env.example` into your deployment environment. The current default identity fields are placeholders and must be replaced before submission.
 
+For the Cloudflare target, follow `CLOUDFLARE_DEPLOYMENT.md`. Its local development commands are:
+
+```powershell
+uv sync
+uv run pywrangler d1 migrations apply vera-production --local
+uv run pywrangler dev
+```
+
 ## Test
 
 ```powershell
 node --test
+uv run pytest
 ```
 
 Run the repeatable local contract judge:
@@ -81,6 +90,10 @@ node scripts/generate-expanded-dataset.js
 - Health traffic is tested above the stated 10-requests-per-second requirement.
 
 ## Production deployment
+
+The recommended free deployment is FastAPI on Cloudflare Python Workers with D1. It provides a stable HTTPS `workers.dev` URL without a VM, Docker host, or persistent disk. See `CLOUDFLARE_DEPLOYMENT.md` for the exact account, database, migration, deployment, and public-judge steps.
+
+The original container deployment remains available as a fallback.
 
 The repository includes a non-root Node 24 `Dockerfile`, persistent-volume `compose.yaml`, container health check, storage readiness endpoint, strict production environment validation, graceful SIGTERM shutdown, and restart-persistence preflight.
 

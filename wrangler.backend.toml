@@ -1,0 +1,17 @@
+name = "vera-challenge-backend"
+main = "cloudflare_app/main.py"
+compatibility_date = "2026-09-25"
+compatibility_flags = ["python_workers"]
+workers_dev = true
+
+[vars]
+TEAM_NAME = "Harshil Saluja"
+TEAM_MEMBER = "Harshil Saluja"
+CONTACT_EMAIL = "harshilsaluja0000@gmail.com"
+SUBMITTED_AT = "2026-09-26T00:00:00Z"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "vera-production"
+database_id = "ba8d61e8-1671-49fa-9a8e-b0f3752e3224"
+migrations_dir = "migrations"

@@ -1,0 +1,13 @@
+name = "vera-challenge"
+main = "cloudflare_gateway/index.mjs"
+compatibility_date = "2026-09-25"
+workers_dev = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "vera-production"
+database_id = "ba8d61e8-1671-49fa-9a8e-b0f3752e3224"
+
+[[services]]
+binding = "VERA_BACKEND"
+service = "vera-challenge-backend"

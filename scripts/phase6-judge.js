@@ -45,7 +45,15 @@ async function main() {
       headers: body === undefined ? undefined : { "content-type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
-    return { status: response.status, body: await response.json(), ms: performance.now() - started };
+    const responseText = await response.text();
+    let responseBody;
+    try {
+      responseBody = JSON.parse(responseText);
+    } catch {
+      const preview = responseText.replace(/\s+/g, " ").slice(0, 180);
+      throw new Error(`${method} ${route} returned HTTP ${response.status} with non-JSON body: ${preview}`);
+    }
+    return { status: response.status, body: responseBody, ms: performance.now() - started };
   };
   const push = (scope, id, payload, version = 1) => request("/v1/context", "POST", {
     scope, context_id: id, version, payload, delivered_at: fixedNow,
@@ -133,7 +141,12 @@ async function main() {
       if (second < 2) await new Promise((resolve) => setTimeout(resolve, Math.max(0, 1000 - (performance.now() - loadStarted - second * 1000))));
     }
     assert(loadResults.every((result) => result.status === 200), "10 requests/second health load failed");
-    assert(Math.max(...loadResults.map((result) => result.ms)) < 2000, "health latency exceeded 2 seconds");
+    const loadLatencies = loadResults.map((result) => Math.round(result.ms));
+    const maximumLoadLatency = Math.max(...loadLatencies);
+    assert(
+      maximumLoadLatency < 2000,
+      `health latency exceeded 2 seconds (max ${maximumLoadLatency}ms; samples ${loadLatencies.join(",")})`,
+    );
 
     const teardown = await request("/v1/teardown", "POST", {});
     const cleanHealth = await request("/v1/healthz");
@@ -145,7 +158,7 @@ async function main() {
       contexts_tested: { categories: categoryFiles.length, merchants: merchants.length, customers: customers.length, triggers: triggers.length },
       eligible_actions_validated: actions.length,
       reply_scenarios: { auto_reply: autoActions, commitment: commit.body.action, hostile: hostile.body.action },
-      load_test: { requests: loadResults.length, rate_per_second: 10, max_latency_ms: Math.round(Math.max(...loadResults.map((result) => result.ms))) },
+      load_test: { requests: loadResults.length, rate_per_second: 10, max_latency_ms: maximumLoadLatency },
       teardown_verified: true,
     }, null, 2));
   } finally {

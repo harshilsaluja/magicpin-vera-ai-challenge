@@ -1,4 +1,12 @@
 data/
+node_modules/
+.venv/
+.venv-workers/
+.uv-cache/
+.uv-python/
+python_modules/
+.pytest_cache/
+__pycache__/
 work/expanded-phase6/
 .env
 .env.*
@@ -6,3 +14,5 @@ work/expanded-phase6/
 *.sqlite
 *.sqlite-shm
 *.sqlite-wal
+.wrangler/
+.dev.vars
