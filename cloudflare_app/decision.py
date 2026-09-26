@@ -4,9 +4,9 @@ from datetime import datetime
 from typing import Any
 
 try:
-    from cloudflare_app.models import parse_iso
+    from cloudflare_app.time_utils import parse_iso
 except ModuleNotFoundError:
-    from models import parse_iso
+    from time_utils import parse_iso
 
 
 KIND_PRIORITY = {

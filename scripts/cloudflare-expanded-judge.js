@@ -15,7 +15,18 @@ async function main() {
       headers: body === undefined ? undefined : { "content-type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
-    return { status: response.status, body: await response.json() };
+    const responseText = await response.text();
+    let responseBody;
+    try {
+      responseBody = JSON.parse(responseText);
+    } catch {
+      const preview = responseText.replace(/\s+/g, " ").slice(0, 180);
+      const contextLabel = body?.scope && body?.context_id
+        ? ` (${body.scope}:${body.context_id})`
+        : "";
+      throw new Error(`${method} ${route}${contextLabel} returned HTTP ${response.status} with non-JSON body: ${preview}`);
+    }
+    return { status: response.status, body: responseBody };
   };
   const now = "2026-04-26T10:30:00Z";
   const push = (scope, id, payload) => request("/v1/context", "POST", {
