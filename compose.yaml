@@ -1,0 +1,23 @@
+services:
+  vera:
+    build: .
+    init: true
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 8080
+      DATABASE_PATH: /app/data/vera.sqlite
+      TEAM_NAME: ${TEAM_NAME:?Set TEAM_NAME}
+      TEAM_MEMBER: ${TEAM_MEMBER:?Set TEAM_MEMBER}
+      CONTACT_EMAIL: ${CONTACT_EMAIL:?Set CONTACT_EMAIL}
+      SUBMITTED_AT: ${SUBMITTED_AT:?Set SUBMITTED_AT}
+    volumes:
+      - vera_data:/app/data
+
+volumes:
+  vera_data:

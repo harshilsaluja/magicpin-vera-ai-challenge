@@ -1,0 +1,8 @@
+data/
+work/expanded-phase6/
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

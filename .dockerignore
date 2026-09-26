@@ -1,0 +1,15 @@
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+data
+outputs
+scripts
+test
+work
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+node_modules
+npm-debug.log

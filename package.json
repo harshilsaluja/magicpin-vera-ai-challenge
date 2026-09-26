@@ -1,0 +1,16 @@
+{
+  "name": "vera-deterministic-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A deterministic, no-LLM implementation for the magicpin Vera AI Challenge.",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test",
+    "dataset:expand": "node scripts/generate-expanded-dataset.js",
+    "judge:local": "node scripts/phase6-judge.js",
+    "preflight": "node scripts/deployment-preflight.js"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
