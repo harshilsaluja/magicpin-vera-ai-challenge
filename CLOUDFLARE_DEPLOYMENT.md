@@ -1,11 +1,11 @@
-# Deploy Vera with FastAPI, Cloudflare Python Workers, and D1
+# Deploy Vera with Cloudflare Workers, Python, and D1
 
-This is the recommended free deployment. The original Node/SQLite implementation remains in the repository as a tested fallback; the public target uses Python, FastAPI, Pydantic, Cloudflare Python Workers, and D1.
+This is the recommended free deployment. The original Node/SQLite implementation remains a tested fallback; the public target uses a lightweight JavaScript gateway, a native Python Worker, and D1. The native handler avoids the cold-start instability of a large framework bundle while preserving the same validation and API behavior.
 
 ```text
-Magicpin judge -> HTTPS workers.dev URL -> FastAPI Python Worker -> D1
-                                             |
-                                             -> deterministic Vera engine
+Magicpin judge -> JavaScript edge gateway -> native Python Worker -> D1
+                         |                         |
+                         -> fast health route     -> deterministic Vera engine
 ```
 
 No external LLM, Docker container, VM, open port, or custom domain is required.
@@ -69,10 +69,12 @@ uv run pywrangler d1 migrations apply vera-production --remote
 
 Confirm the migration when prompted. It creates Vera's context, suppression, conversation, turn, and reply tables.
 
-## 5. Deploy the FastAPI Worker
+## 5. Deploy the Python backend and edge gateway
 
 ```powershell
-uv run pywrangler deploy
+node scripts/configure-edge-gateway.js
+uv run --python 3.14.2 pywrangler deploy --config wrangler.backend.toml
+npx.cmd wrangler@latest deploy --config wrangler.gateway.toml
 ```
 
 If prompted to configure a `workers.dev` subdomain, choose a short professional name. Deployment returns a URL similar to:
@@ -113,7 +115,7 @@ After the public judge passes:
 ```powershell
 git status
 git add .
-git commit -m "Add FastAPI Cloudflare Worker and D1 deployment"
+git commit -m "Add Cloudflare Python Worker, edge gateway, and D1 deployment"
 git push origin main
 ```
 
@@ -145,7 +147,7 @@ node scripts/phase6-judge.js
 
 - Original Node regression suite: 41/41 passed.
 - Python unit suite: 11/11 passed.
-- Full contract judge against the FastAPI Python Worker: passed.
+- Full contract judge against the public edge gateway and native Python Worker: passed.
 - Contexts exercised: 5 categories, 10 merchants, 15 customers, and 25 triggers.
 - Eligible proactive actions validated: 24.
 - Auto-reply sequence: `wait`, `wait`, `end`.

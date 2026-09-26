@@ -4,7 +4,7 @@ A staged, no-LLM implementation for the magicpin Vera AI Challenge.
 
 ## Supported stacks
 
-- Recommended public deployment: Python, FastAPI, Pydantic, Cloudflare Python Workers, and Cloudflare D1.
+- Recommended public deployment: a lightweight Cloudflare JavaScript gateway, native Python Worker, and Cloudflare D1.
 - Reference/local deployment: Node.js 24, native `http`, and built-in SQLite (`node:sqlite`).
 - Both targets implement the same deterministic decision and reply behavior; no external LLM is required.
 - Both targets provide durable, versioned context and stateful conversation storage.
@@ -91,7 +91,7 @@ node scripts/generate-expanded-dataset.js
 
 ## Production deployment
 
-The recommended free deployment is FastAPI on Cloudflare Python Workers with D1. It provides a stable HTTPS `workers.dev` URL without a VM, Docker host, or persistent disk. See `CLOUDFLARE_DEPLOYMENT.md` for the exact account, database, migration, deployment, and public-judge steps.
+The recommended free deployment uses a lightweight JavaScript health gateway in front of a native Python Worker with D1. This keeps the public health route fast while preserving the deterministic Python engine and accurate D1-backed state. See `CLOUDFLARE_DEPLOYMENT.md` for deployment and judge steps.
 
 The original container deployment remains available as a fallback.
 

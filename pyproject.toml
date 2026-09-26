@@ -1,7 +1,7 @@
 [project]
 name = "vera-challenge-cloudflare"
 version = "1.1.0"
-description = "FastAPI and D1 deployment for the Magicpin Vera AI Challenge"
+description = "Native Python Worker and D1 deployment for the Magicpin Vera AI Challenge"
 requires-python = ">=3.13"
 dependencies = []
 
